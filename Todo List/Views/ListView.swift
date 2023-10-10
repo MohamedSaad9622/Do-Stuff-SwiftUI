@@ -9,17 +9,20 @@ import SwiftUI
 
 struct ListView: View {
     
-    @State var items: [String] = [
-        "first item",
-        "second item",
-        "third item"
-    ]
+    @EnvironmentObject var listViewModel : ListViewModel
     
     var body: some View {
         List {
-            ForEach(items, id: \.self) { item  in
-                ListRowView(title: item)
+            ForEach(listViewModel.items) { item  in
+                ListRowView(item: item)
+                    .onTapGesture {
+                        withAnimation(.linear) {
+                            listViewModel.updateItem(item: item)
+                        }
+                    }
             }
+            .onDelete(perform: listViewModel.delete)
+            .onMove(perform: listViewModel.move)
             
         }
         .listStyle(PlainListStyle())
@@ -27,6 +30,8 @@ struct ListView: View {
         .navigationBarItems(leading: EditButton(),
                             trailing: NavigationLink("Add", destination: AddView()) )
     }
+    
+    
 }
 
 struct ListView_Previews: PreviewProvider {
@@ -34,6 +39,7 @@ struct ListView_Previews: PreviewProvider {
         NavigationView {
             ListView()
         }
+        .environmentObject(ListViewModel())
     }
 }
 
