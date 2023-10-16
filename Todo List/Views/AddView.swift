@@ -14,15 +14,16 @@ struct AddView: View {
     @EnvironmentObject var listViewModel: ListViewModel
     @State var alertTitle: String = ""
     @State var showAlert: Bool = false
+    var lightGray = Color("lightGray")
     
     var body: some View {
         ScrollView{
             VStack{
                 TextField("Add something here...", text: $textFieldText)
-                    .foregroundColor(Color.white)
+//                    .foregroundColor(Color.white)
                     .padding(.horizontal)
                     .frame(height: 55)
-                    .background(Color.gray)
+                    .background(Color(UIColor.secondarySystemBackground))
                     .cornerRadius(10)
                 
                 Button {
@@ -64,10 +65,18 @@ struct AddView: View {
 
 struct AddView_Previews: PreviewProvider {
     static var previews: some View {
-        NavigationView {
-            AddView()
+        Group {
+            NavigationView {
+                AddView()
+            }
+            .preferredColorScheme(.light)
+            .environmentObject(ListViewModel())
+            NavigationView {
+                AddView()
+            }
+            .preferredColorScheme(.dark)
+            .environmentObject(ListViewModel())
         }
-        .environmentObject(ListViewModel())
         
     }
 }
